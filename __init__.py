@@ -78,10 +78,13 @@ def get_models_for_provider(self, context):
         ]
     elif prov == 'OPENAI':
         return [
-            ('gpt-4o', "GPT-4o (Recomendado)", "Modelo multimodal insignia de OpenAI"),
-            ('gpt-4o-mini', "GPT-4o Mini (Ultra Barato)", "Económico, rápido e inteligente"),
-            ('o3-mini', "o3-mini (Razonamiento Lógico)", "Especializado en STEM y código"),
-            ('o1', "o1 (Razonamiento Extremo)", "Pensamiento paso a paso"),
+            ('gpt-5.6-luna', "GPT-5.6 Luna ($0.20/1M - Más Económico)", "Optimizado para costes, 1.05M tokens de contexto"),
+            ('gpt-5.4-mini', "GPT-5.4 Mini ($0.75/1M - Rápido)", "Modelo mini de alta eficiencia y soporte de subagentes"),
+            ('gpt-5.6-terra', "GPT-5.6 Terra ($2.00/1M)", "Equilibrio entre inteligencia y costo"),
+            ('gpt-5.6-sol', "GPT-5.6 Sol ($4.00/1M - Insignia)", "Modelo insignia para trabajo profesional complejo"),
+            ('gpt-6-astra', "GPT-6 Astra ($10.00/1M - Máxima Capacidad)", "El modelo más capaz para trabajo end-to-end"),
+            ('gpt-4o', "GPT-4o ($2.50/1M - Clásico)", "Modelo multimodal previo"),
+            ('gpt-4o-mini', "GPT-4o Mini ($0.15/1M - Legacy)", "Modelo mini clásico"),
         ]
     elif prov == 'GOOGLE':
         return [

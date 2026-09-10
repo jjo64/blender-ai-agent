@@ -1,4 +1,4 @@
-﻿"""
+"""
 tests/test_agent_and_providers.py
 =================================
 Pruebas unitarias para los adaptadores de proveedores (Anthropic, OpenAI, Gemini)
@@ -80,7 +80,7 @@ class TestAgentAndProviders(unittest.TestCase):
         ]
         payload = prov._prepare_payload(messages, stream=True)
 
-        self.assertEqual(payload["model"], "gpt-4o")
+        self.assertEqual(payload["model"], "gpt-5.6-luna")
         self.assertTrue(payload["stream"])
         self.assertEqual(payload["messages"][1]["tool_calls"][0]["function"]["name"], "create_cube")
 

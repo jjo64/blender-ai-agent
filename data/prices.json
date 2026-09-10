@@ -1,4 +1,4 @@
-﻿{
+{
   "last_updated": "2026-09-01",
   "description": "Precios de API por millón de tokens en USD. Actualizable manualmente o vía release.",
   "models": {
@@ -13,6 +13,36 @@
       "provider": "anthropic",
       "input": 0.8,
       "output": 4.0
+    },
+    "gpt-5.6-luna": {
+      "provider": "openai",
+      "input": 0.20,
+      "output": 1.20
+    },
+    "gpt-5.4-mini": {
+      "provider": "openai",
+      "input": 0.75,
+      "output": 4.50
+    },
+    "gpt-5.4-nano": {
+      "provider": "openai",
+      "input": 0.20,
+      "output": 1.20
+    },
+    "gpt-5.6-terra": {
+      "provider": "openai",
+      "input": 2.0,
+      "output": 12.0
+    },
+    "gpt-5.6-sol": {
+      "provider": "openai",
+      "input": 4.0,
+      "output": 20.0
+    },
+    "gpt-6-astra": {
+      "provider": "openai",
+      "input": 10.0,
+      "output": 50.0
     },
     "gpt-4o": {
       "provider": "openai",

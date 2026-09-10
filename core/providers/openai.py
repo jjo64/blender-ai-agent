@@ -46,12 +46,20 @@ class OpenAIProvider(BaseProvider):
 
     API_URL = "https://api.openai.com/v1/chat/completions"
 
-    def __init__(self, api_key: str, default_model: str = "gpt-4o"):
+    def __init__(self, api_key: str, default_model: str = "gpt-5.6-luna"):
         super().__init__(api_key=api_key, default_model=default_model)
         self.cost_tracker = CostTracker()
 
     def get_available_models(self) -> List[str]:
-        return ["gpt-4o", "gpt-4o-mini", "o1", "o3-mini"]
+        return [
+            "gpt-5.6-luna",
+            "gpt-5.4-mini",
+            "gpt-5.6-terra",
+            "gpt-5.6-sol",
+            "gpt-6-astra",
+            "gpt-4o",
+            "gpt-4o-mini",
+        ]
 
     def supports_vision(self) -> bool:
         return True
