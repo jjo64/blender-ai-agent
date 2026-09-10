@@ -241,14 +241,33 @@ class AI_AGENT_OT_clear_chat(Operator):
 
 
 class AI_AGENT_OT_open_preferences(Operator):
-    """Abre la ventana de Preferencias de Blender directamente en la configuración del Add-on."""
+    """Abre un diálogo directo para ingresar las API Keys de los proveedores."""
     bl_idname = "ai_agent.open_preferences"
-    bl_label = "Configurar API Keys"
-    bl_description = "Abre las preferencias de Blender para ingresar las claves de API"
+    bl_label = "🔑 Configuración de API Keys"
+    bl_description = "Abre la ventana para ingresar o modificar tus API Keys de OpenAI, Anthropic y Google"
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self, width=500)
+
+    def draw(self, context):
+        layout = self.layout
+        addon_prefs = get_addon_preferences(context)
+        if not addon_prefs:
+            layout.label(text="No se pudieron cargar las preferencias.", icon='ERROR')
+            return
+
+        box = layout.box()
+        box.label(text="Ingresa tus claves de API:", icon='LOCKED')
+        box.prop(addon_prefs, "openai_api_key", text="OpenAI (GPT / Luna / Sol)")
+        box.prop(addon_prefs, "anthropic_api_key", text="Anthropic (Claude 3.7 / 3.5)")
+        box.prop(addon_prefs, "google_api_key", text="Google Gemini (2.0 Flash / Pro)")
+
+        box_limits = layout.box()
+        box_limits.label(text="Parámetros de ejecución:", icon='PREFERENCES')
+        box_limits.prop(addon_prefs, "max_iterations", text="Iteraciones máximas")
 
     def execute(self, context):
-        bpy.ops.screen.userpref_show('INVOKE_DEFAULT')
-        context.preferences.active_section = 'ADDONS'
+        self.report({'INFO'}, "Configuración de API Keys guardada.")
         return {'FINISHED'}
 
 
