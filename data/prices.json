@@ -1,0 +1,38 @@
+﻿{
+  "last_updated": "2026-09-01",
+  "description": "Precios de API por millón de tokens en USD. Actualizable manualmente o vía release.",
+  "models": {
+    "claude-3-7-sonnet": {
+      "provider": "anthropic",
+      "input": 3.0,
+      "output": 15.0,
+      "cache_read": 0.3,
+      "cache_write": 3.75
+    },
+    "claude-3-5-haiku": {
+      "provider": "anthropic",
+      "input": 0.8,
+      "output": 4.0
+    },
+    "gpt-4o": {
+      "provider": "openai",
+      "input": 2.5,
+      "output": 10.0
+    },
+    "gpt-4o-mini": {
+      "provider": "openai",
+      "input": 0.15,
+      "output": 0.6
+    },
+    "gemini-2.0-flash": {
+      "provider": "google",
+      "input": 0.1,
+      "output": 0.4
+    },
+    "gemini-1.5-pro": {
+      "provider": "google",
+      "input": 1.25,
+      "output": 5.0
+    }
+  }
+}

@@ -1,0 +1,16 @@
+﻿schema_version = "1.0.0"
+
+id = "blender_ai_agent"
+version = "0.1.0"
+name = "Blender AI Agent"
+tagline = "Autonomous AI Agent with multi-provider LLM support, real-time streaming, and safety gates"
+maintainer = "jjo64"
+type = "add-on"
+
+website = "https://github.com/jjo64/blender-ai-agent"
+tags = ["3D View", "Development", "AI", "Modeling"]
+
+blender_version_min = "4.2.0"
+license = [
+    "SPDX:GPL-2.0-or-later",
+]

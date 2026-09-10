@@ -1,0 +1,25 @@
+﻿# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Blender temporary files
+*.blend@
+*.blend1
+*.blend2
+
+# Environments & virtualenv
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS specific
+Thumbs.db
+.DS_Store
