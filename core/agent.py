@@ -1,4 +1,4 @@
-﻿"""
+"""
 core/agent.py
 =============
 Bucle principal de razonamiento del Agente (ReAct Loop: Reason + Act).
@@ -12,20 +12,36 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
-from core.context_manager import ContextManager
-from core.providers.base import (
-    BaseProvider,
-    ErrorType,
-    LLMResponse,
-    Message,
-    ProviderException,
-    StopReason,
-    StreamChunk,
-    ToolCall,
-)
-from core.scene_inspector import SceneInspector, SceneSnapshot
-from core.security.auth_gate import AuthGate
-from core.tool_registry import ToolRegistry, registry as default_registry
+try:
+    from .context_manager import ContextManager
+    from .providers.base import (
+        BaseProvider,
+        ErrorType,
+        LLMResponse,
+        Message,
+        ProviderException,
+        StopReason,
+        StreamChunk,
+        ToolCall,
+    )
+    from .scene_inspector import SceneInspector, SceneSnapshot
+    from .security.auth_gate import AuthGate
+    from .tool_registry import ToolRegistry, registry as default_registry
+except ImportError:
+    from core.context_manager import ContextManager
+    from core.providers.base import (
+        BaseProvider,
+        ErrorType,
+        LLMResponse,
+        Message,
+        ProviderException,
+        StopReason,
+        StreamChunk,
+        ToolCall,
+    )
+    from core.scene_inspector import SceneInspector, SceneSnapshot
+    from core.security.auth_gate import AuthGate
+    from core.tool_registry import ToolRegistry, registry as default_registry
 
 logger = logging.getLogger("BlenderAIAgent.Agent")
 

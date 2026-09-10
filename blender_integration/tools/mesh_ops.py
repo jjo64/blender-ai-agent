@@ -1,4 +1,4 @@
-﻿"""
+"""
 blender_integration/tools/mesh_ops.py
 =====================================
 Herramientas declarativas para la creación y manipulación de mallas en Blender.
@@ -16,7 +16,10 @@ try:
 except ImportError:
     BLENDER_AVAILABLE = False
 
-from core.tool_registry import tool
+try:
+    from ...core.tool_registry import tool
+except ImportError:
+    from core.tool_registry import tool
 
 logger = logging.getLogger("BlenderAIAgent.MeshOps")
 

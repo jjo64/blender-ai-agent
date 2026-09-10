@@ -1,4 +1,4 @@
-﻿"""
+"""
 blender_integration/threading_model.py
 ======================================
 Modelo de concurrencia seguro para Blender.
@@ -20,7 +20,10 @@ try:
 except ImportError:
     BLENDER_AVAILABLE = False
 
-from core.providers.base import ErrorType, LLMResponse, StreamChunk
+try:
+    from ..core.providers.base import ErrorType, LLMResponse, StreamChunk
+except ImportError:
+    from core.providers.base import ErrorType, LLMResponse, StreamChunk
 
 logger = logging.getLogger("BlenderAIAgent.Threading")
 

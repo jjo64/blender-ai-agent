@@ -1,4 +1,4 @@
-﻿"""
+"""
 core/providers/anthropic.py
 ===========================
 Adaptador para la API de Anthropic (Claude 3.7 Sonnet, Claude 3.5 Haiku).
@@ -13,17 +13,30 @@ import urllib.request
 import urllib.error
 from typing import Any, Callable, Dict, List, Optional
 
-from core.providers.base import (
-    BaseProvider,
-    ErrorType,
-    LLMResponse,
-    Message,
-    ProviderException,
-    StopReason,
-    StreamChunk,
-    ToolCall,
-)
-from core.tracker.cost_tracker import CostTracker
+try:
+    from .base import (
+        BaseProvider,
+        ErrorType,
+        LLMResponse,
+        Message,
+        ProviderException,
+        StopReason,
+        StreamChunk,
+        ToolCall,
+    )
+    from ..tracker.cost_tracker import CostTracker
+except ImportError:
+    from core.providers.base import (
+        BaseProvider,
+        ErrorType,
+        LLMResponse,
+        Message,
+        ProviderException,
+        StopReason,
+        StreamChunk,
+        ToolCall,
+    )
+    from core.tracker.cost_tracker import CostTracker
 
 logger = logging.getLogger("BlenderAIAgent.Anthropic")
 

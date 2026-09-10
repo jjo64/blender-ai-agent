@@ -1,4 +1,4 @@
-﻿"""
+"""
 blender_integration/tools/material_ops.py
 =========================================
 Herramientas declarativas para crear, configurar y asignar materiales Principled BSDF en Blender.
@@ -14,7 +14,10 @@ try:
 except ImportError:
     BLENDER_AVAILABLE = False
 
-from core.tool_registry import tool
+try:
+    from ...core.tool_registry import tool
+except ImportError:
+    from core.tool_registry import tool
 
 logger = logging.getLogger("BlenderAIAgent.MaterialOps")
 

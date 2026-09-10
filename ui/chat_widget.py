@@ -18,13 +18,22 @@ except ImportError:
     BLENDER_AVAILABLE = False
     Operator = object
 
-from blender_integration.state_manager.checkpoints import checkpoint_manager
-from blender_integration.threading_model import PendingAction, StreamChunk, WorkerResult, task_bridge
-from blender_integration.viewport_capture import capture_viewport_png
-from core.agent import AgentLoop, AgentResult
-from core.scene_inspector import SceneInspector
-from state.history import HistoryPersistence
-from state.session import session_state
+try:
+    from ..blender_integration.state_manager.checkpoints import checkpoint_manager
+    from ..blender_integration.threading_model import PendingAction, StreamChunk, WorkerResult, task_bridge
+    from ..blender_integration.viewport_capture import capture_viewport_png
+    from ..core.agent import AgentLoop, AgentResult
+    from ..core.scene_inspector import SceneInspector
+    from ..state.history import HistoryPersistence
+    from ..state.session import session_state
+except ImportError:
+    from blender_integration.state_manager.checkpoints import checkpoint_manager
+    from blender_integration.threading_model import PendingAction, StreamChunk, WorkerResult, task_bridge
+    from blender_integration.viewport_capture import capture_viewport_png
+    from core.agent import AgentLoop, AgentResult
+    from core.scene_inspector import SceneInspector
+    from state.history import HistoryPersistence
+    from state.session import session_state
 
 logger = logging.getLogger("BlenderAIAgent.UI")
 

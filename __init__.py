@@ -30,23 +30,39 @@ import bpy
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty
 from bpy.types import PropertyGroup
 
-# Importar herramientas para forzar el auto-registro en el ToolRegistry
-import blender_integration.tools.mesh_ops
-import blender_integration.tools.material_ops
-import blender_integration.tools.run_script
-
-from blender_integration.threading_model import task_bridge, StreamChunk, WorkerResult, PendingAction
-from ui.settings_panel import AIAgentPreferences
-from ui.chat_widget import (
-    AI_AGENT_OT_send_message,
-    AI_AGENT_OT_resolve_approval,
-    AI_AGENT_OT_restore_checkpoint,
-    AI_AGENT_OT_create_checkpoint,
-    AI_AGENT_OT_clear_chat,
-    AI_AGENT_OT_open_preferences,
-    AI_AGENT_OT_open_floating_dialog,
-)
-from ui.main_panel import VIEW3D_PT_AIAgentMainPanel
+# Importar módulos y operadores de la extensión
+try:
+    from .blender_integration.tools import mesh_ops
+    from .blender_integration.tools import material_ops
+    from .blender_integration.tools import run_script
+    from .blender_integration.threading_model import task_bridge, StreamChunk, WorkerResult, PendingAction
+    from .ui.settings_panel import AIAgentPreferences
+    from .ui.chat_widget import (
+        AI_AGENT_OT_send_message,
+        AI_AGENT_OT_resolve_approval,
+        AI_AGENT_OT_restore_checkpoint,
+        AI_AGENT_OT_create_checkpoint,
+        AI_AGENT_OT_clear_chat,
+        AI_AGENT_OT_open_preferences,
+        AI_AGENT_OT_open_floating_dialog,
+    )
+    from .ui.main_panel import VIEW3D_PT_AIAgentMainPanel
+except ImportError:
+    import blender_integration.tools.mesh_ops
+    import blender_integration.tools.material_ops
+    import blender_integration.tools.run_script
+    from blender_integration.threading_model import task_bridge, StreamChunk, WorkerResult, PendingAction
+    from ui.settings_panel import AIAgentPreferences
+    from ui.chat_widget import (
+        AI_AGENT_OT_send_message,
+        AI_AGENT_OT_resolve_approval,
+        AI_AGENT_OT_restore_checkpoint,
+        AI_AGENT_OT_create_checkpoint,
+        AI_AGENT_OT_clear_chat,
+        AI_AGENT_OT_open_preferences,
+        AI_AGENT_OT_open_floating_dialog,
+    )
+    from ui.main_panel import VIEW3D_PT_AIAgentMainPanel
 
 
 # -------------------------------------------------------------------------

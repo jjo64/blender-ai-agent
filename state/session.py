@@ -1,4 +1,4 @@
-﻿"""
+"""
 state/session.py
 ================
 Estado de la sesión activa en Blender.
@@ -9,14 +9,24 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict, Optional
 
-from core.context_manager import ContextManager
-from core.providers.anthropic import AnthropicProvider
-from core.providers.base import BaseProvider
-from core.providers.gemini import GeminiProvider
-from core.providers.openai import OpenAIProvider
-from core.security.auth_gate import AuthGate
-from core.tracker.cost_tracker import CostTracker
-from blender_integration.state_manager.checkpoints import CheckpointManager
+try:
+    from ..core.context_manager import ContextManager
+    from ..core.providers.anthropic import AnthropicProvider
+    from ..core.providers.base import BaseProvider
+    from ..core.providers.gemini import GeminiProvider
+    from ..core.providers.openai import OpenAIProvider
+    from ..core.security.auth_gate import AuthGate
+    from ..core.tracker.cost_tracker import CostTracker
+    from ..blender_integration.state_manager.checkpoints import CheckpointManager
+except ImportError:
+    from core.context_manager import ContextManager
+    from core.providers.anthropic import AnthropicProvider
+    from core.providers.base import BaseProvider
+    from core.providers.gemini import GeminiProvider
+    from core.providers.openai import OpenAIProvider
+    from core.security.auth_gate import AuthGate
+    from core.tracker.cost_tracker import CostTracker
+    from blender_integration.state_manager.checkpoints import CheckpointManager
 
 
 class SessionState:

@@ -14,8 +14,12 @@ except ImportError:
     BLENDER_AVAILABLE = False
     Panel = object
 
-from blender_integration.state_manager.checkpoints import checkpoint_manager
-from state.session import session_state
+try:
+    from ..blender_integration.state_manager.checkpoints import checkpoint_manager
+    from ..state.session import session_state
+except ImportError:
+    from blender_integration.state_manager.checkpoints import checkpoint_manager
+    from state.session import session_state
 
 
 class VIEW3D_PT_AIAgentMainPanel(Panel):

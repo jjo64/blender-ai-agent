@@ -1,4 +1,4 @@
-﻿"""
+"""
 blender_integration/tools/run_script.py
 =======================================
 Herramienta de ejecución de scripts de Python dinámicos en Blender.
@@ -17,8 +17,12 @@ try:
 except ImportError:
     BLENDER_AVAILABLE = False
 
-from core.security.sandbox import execute_sandboxed, validate_python_code
-from core.tool_registry import tool
+try:
+    from ...core.security.sandbox import execute_sandboxed, validate_python_code
+    from ...core.tool_registry import tool
+except ImportError:
+    from core.security.sandbox import execute_sandboxed, validate_python_code
+    from core.tool_registry import tool
 
 logger = logging.getLogger("BlenderAIAgent.RunScript")
 
