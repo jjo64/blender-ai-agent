@@ -20,11 +20,20 @@ bl_info = {
 
 import sys
 import os
+import importlib
 
 # Asegurar que el directorio raíz de la extensión esté en sys.path
 _addon_dir = os.path.dirname(os.path.abspath(__file__))
 if _addon_dir not in sys.path:
     sys.path.insert(0, _addon_dir)
+
+# Forzar recarga de submódulos si ya estaban cacheados en la sesión de Blender
+for mod_name in list(sys.modules.keys()):
+    if any(mod_name.startswith(p) for p in ("core", "blender_integration", "ui", "state")):
+        try:
+            importlib.reload(sys.modules[mod_name])
+        except Exception:
+            sys.modules.pop(mod_name, None)
 
 import bpy
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty
