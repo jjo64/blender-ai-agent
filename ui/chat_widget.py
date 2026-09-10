@@ -82,8 +82,9 @@ class AI_AGENT_OT_send_message(Operator):
             return {'CANCELLED'}
 
         # 2. Inicializar proveedor y estado
+        selected_model = props.model_selection if hasattr(props, "model_selection") and props.model_selection != 'default' else None
         try:
-            provider = session_state.initialize_provider(provider_name, api_key)
+            provider = session_state.initialize_provider(provider_name, api_key, model_name=selected_model)
         except Exception as ex:
             self.report({'ERROR'}, f"Error al inicializar proveedor: {str(ex)}")
             return {'CANCELLED'}
@@ -227,4 +228,66 @@ class AI_AGENT_OT_clear_chat(Operator):
         props.last_user_message = ""
         props.status_message = "Chat reiniciado. Listo."
         self.report({'INFO'}, "Historial reiniciado.")
+        return {'FINISHED'}
+
+
+class AI_AGENT_OT_open_preferences(Operator):
+    """Abre la ventana de Preferencias de Blender directamente en la configuración del Add-on."""
+    bl_idname = "ai_agent.open_preferences"
+    bl_label = "Configurar API Keys"
+    bl_description = "Abre las preferencias de Blender para ingresar las claves de API"
+
+    def execute(self, context):
+        bpy.ops.screen.userpref_show('INVOKE_DEFAULT')
+        context.preferences.active_section = 'ADDONS'
+        return {'FINISHED'}
+
+
+class AI_AGENT_OT_open_floating_dialog(Operator):
+    """Abre una ventana flotante modal amplia para interactuar con el chat cómodamente."""
+    bl_idname = "ai_agent.open_floating_dialog"
+    bl_label = "🤖 Blender AI Agent - Consola Ampliada"
+    bl_description = "Abre una ventana flotante más grande para ver el historial y chatear con comodidad"
+
+    def invoke(self, context, event):
+        return context.window_manager.invoke_props_dialog(self, width=650)
+
+    def draw(self, context):
+        layout = self.layout
+        props = context.scene.ai_agent_props
+        tracker = session_state.cost_tracker
+
+        # Cabecera con selector y costos
+        row_top = layout.row(align=True)
+        row_top.prop(props, "provider", text="Proveedor")
+        row_top.prop(props, "model_selection", text="Modelo")
+        row_top.label(text=f"💰 Sesión: ${tracker.session_cost_usd:.4f}", icon='FUND')
+
+        # Vista de chat expandida
+        box_chat = layout.box()
+        box_chat.scale_y = 1.2
+        if props.last_user_message:
+            box_user = box_chat.box()
+            box_user.label(text=f"Tú: {props.last_user_message}", icon='USER')
+        
+        if props.streaming_response or props.status_message:
+            box_res = box_chat.box()
+            if props.is_running:
+                box_res.label(text=f"⏳ {props.status_message}", icon='SORTTIME')
+            for line in (props.streaming_response or "").splitlines():
+                box_res.label(text=line)
+
+        # Entrada de texto
+        col_in = layout.column(align=True)
+        col_in.prop(props, "user_prompt", text="Instrucción", icon='CONSOLE')
+        
+        row_opts = col_in.row(align=True)
+        row_opts.prop(props, "attach_viewport", text="Adjuntar Vista 3D", icon='CAMERA_DATA')
+        row_opts.prop(props, "auto_approve", text="Auto-aprobar", icon='CHECKBOX_HLT')
+
+        row_actions = col_in.row(align=True)
+        row_actions.operator("ai_agent.send_message", text="Enviar Instrucción", icon='PLAY')
+        row_actions.operator("ai_agent.clear_chat", text="Limpiar Historial", icon='TRASH')
+
+    def execute(self, context):
         return {'FINISHED'}

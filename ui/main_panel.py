@@ -1,4 +1,4 @@
-﻿"""
+"""
 ui/main_panel.py
 ================
 Panel principal del Agente de IA ubicado en el Sidebar (N-Panel) del 3D Viewport.
@@ -31,14 +31,21 @@ class VIEW3D_PT_AIAgentMainPanel(Panel):
         tracker = session_state.cost_tracker
 
         # -------------------------------------------------------------
-        # 1. Configuración de Proveedor y Modelo
+        # 1. Cabecera con Accesos Rápidos (Maximizar y Configuración)
+        # -------------------------------------------------------------
+        row_header = layout.row(align=True)
+        row_header.operator("ai_agent.open_floating_dialog", text="Ventana Ampliada", icon='WINDOW')
+        row_header.operator("ai_agent.open_preferences", text="Preferencias", icon='PREFERENCES')
+
+        # -------------------------------------------------------------
+        # 2. Configuración de Proveedor y Modelo
         # -------------------------------------------------------------
         box_top = layout.box()
-        row_prov = box_top.row(align=True)
-        row_prov.prop(props, "provider", text="Proveedor")
+        box_top.prop(props, "provider", text="Proveedor")
+        box_top.prop(props, "model_selection", text="Modelo")
         
         # -------------------------------------------------------------
-        # 2. Widget de Costos en Tiempo Real
+        # 3. Widget de Costos en Tiempo Real
         # -------------------------------------------------------------
         box_cost = layout.box()
         row_cost = box_cost.row(align=True)

@@ -43,6 +43,8 @@ from ui.chat_widget import (
     AI_AGENT_OT_restore_checkpoint,
     AI_AGENT_OT_create_checkpoint,
     AI_AGENT_OT_clear_chat,
+    AI_AGENT_OT_open_preferences,
+    AI_AGENT_OT_open_floating_dialog,
 )
 from ui.main_panel import VIEW3D_PT_AIAgentMainPanel
 
@@ -50,16 +52,46 @@ from ui.main_panel import VIEW3D_PT_AIAgentMainPanel
 # -------------------------------------------------------------------------
 # Propiedades de Escena / UI
 # -------------------------------------------------------------------------
+def get_models_for_provider(self, context):
+    prov = self.provider
+    if prov == 'ANTHROPIC':
+        return [
+            ('claude-3-7-sonnet', "Claude 3.7 Sonnet (Recomendado)", "Modelo insignia con razonamiento híbrido"),
+            ('claude-3-5-haiku', "Claude 3.5 Haiku (Rápido/Económico)", "Ultra rápido y económico"),
+            ('claude-3-opus', "Claude 3 Opus", "Modelo de razonamiento profundo"),
+        ]
+    elif prov == 'OPENAI':
+        return [
+            ('gpt-4o', "GPT-4o (Recomendado)", "Modelo multimodal insignia de OpenAI"),
+            ('gpt-4o-mini', "GPT-4o Mini (Ultra Barato)", "Económico, rápido e inteligente"),
+            ('o3-mini', "o3-mini (Razonamiento Lógico)", "Especializado en STEM y código"),
+            ('o1', "o1 (Razonamiento Extremo)", "Pensamiento paso a paso"),
+        ]
+    elif prov == 'GOOGLE':
+        return [
+            ('gemini-2.0-flash', "Gemini 2.0 Flash (Recomendado)", "Próxima generación, ultrarrápido y multimodal"),
+            ('gemini-1.5-pro', "Gemini 1.5 Pro (Contexto Masivo)", "Hasta 2 millones de tokens de contexto"),
+            ('gemini-1.5-flash', "Gemini 1.5 Flash", "Económico y versátil"),
+        ]
+    return [('default', "Modelo por Defecto", "")]
+
+
 class AIAgentSceneProperties(PropertyGroup):
     provider: EnumProperty(
         name="Proveedor",
         description="Proveedor de LLM a utilizar",
         items=[
-            ('ANTHROPIC', "Anthropic (Claude 3.7)", "Claude 3.7 Sonnet con razonamiento y tool use"),
-            ('OPENAI', "OpenAI (GPT-4o)", "GPT-4o con soporte multimodal"),
-            ('GOOGLE', "Google (Gemini 2.0)", "Gemini 2.0 Flash / 1.5 Pro"),
+            ('ANTHROPIC', "Anthropic (Claude)", "Claude 3.7 Sonnet / 3.5 Haiku"),
+            ('OPENAI', "OpenAI (GPT / o-series)", "GPT-4o / GPT-4o-mini / o3-mini"),
+            ('GOOGLE', "Google (Gemini)", "Gemini 2.0 Flash / 1.5 Pro"),
         ],
         default='ANTHROPIC'
+    )
+
+    model_selection: EnumProperty(
+        name="Modelo",
+        description="Modelo específico a utilizar para la sesión",
+        items=get_models_for_provider
     )
 
     user_prompt: StringProperty(
@@ -150,6 +182,8 @@ classes = (
     AI_AGENT_OT_restore_checkpoint,
     AI_AGENT_OT_create_checkpoint,
     AI_AGENT_OT_clear_chat,
+    AI_AGENT_OT_open_preferences,
+    AI_AGENT_OT_open_floating_dialog,
     VIEW3D_PT_AIAgentMainPanel,
 )
 
