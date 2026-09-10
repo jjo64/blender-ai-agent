@@ -123,3 +123,4 @@ class VIEW3D_PT_AIAgentMainPanel(Panel):
         row_cp_actions.operator("ai_agent.create_checkpoint", text="Guardar", icon='ADD')
         if cps:
             row_cp_actions.operator("ai_agent.restore_checkpoint", text="Restaurar Último", icon='LOOP_BACK')
+            row_cp_actions.operator("ai_agent.clear_checkpoints", text="Purgar", icon='TRASH')

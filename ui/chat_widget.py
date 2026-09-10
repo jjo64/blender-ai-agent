@@ -224,6 +224,18 @@ class AI_AGENT_OT_create_checkpoint(Operator):
         return {'FINISHED'}
 
 
+class AI_AGENT_OT_clear_checkpoints(Operator):
+    """Elimina todos los checkpoints temporales de la sesión actual."""
+    bl_idname = "ai_agent.clear_checkpoints"
+    bl_label = "Limpiar Checkpoints"
+    bl_description = "Elimina los snapshots temporales de la escena para reiniciar el historial"
+
+    def execute(self, context):
+        checkpoint_manager.cleanup()
+        self.report({'INFO'}, "Checkpoints temporales eliminados.")
+        return {'FINISHED'}
+
+
 class AI_AGENT_OT_clear_chat(Operator):
     """Limpia el historial de conversación en la interfaz y en el gestor de contexto."""
     bl_idname = "ai_agent.clear_chat"
