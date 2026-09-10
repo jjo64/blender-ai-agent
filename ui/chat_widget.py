@@ -1,4 +1,4 @@
-﻿"""
+"""
 ui/chat_widget.py
 =================
 Operadores y lógica de interacción para el envío de mensajes, streaming en vivo,
@@ -29,6 +29,20 @@ from state.session import session_state
 logger = logging.getLogger("BlenderAIAgent.UI")
 
 
+def get_addon_preferences(context):
+    """Busca las preferencias del Addon/Extensión de forma segura en Blender."""
+    pkg = __package__ or "blender_ai_agent"
+    if pkg in context.preferences.addons:
+        return context.preferences.addons[pkg].preferences
+    for name, addon in context.preferences.addons.items():
+        if "blender_ai_agent" in name or name.endswith("blender_ai_agent"):
+            return addon.preferences
+    for addon in context.preferences.addons.values():
+        if hasattr(addon.preferences, "anthropic_api_key"):
+            return addon.preferences
+    return None
+
+
 class AI_AGENT_OT_send_message(Operator):
     """Envía la instrucción del usuario al agente de IA para iniciar el bucle ReAct."""
     bl_idname = "ai_agent.send_message"
@@ -48,7 +62,11 @@ class AI_AGENT_OT_send_message(Operator):
             return {'CANCELLED'}
 
         # 1. Obtener preferencias y credenciales
-        addon_prefs = context.preferences.addons[__package__.split('.')[0] if __package__ else "blender-ai-agent"].preferences
+        addon_prefs = get_addon_preferences(context)
+        if not addon_prefs:
+            self.report({'ERROR'}, "No se pudieron cargar las Preferencias de Blender AI Agent.")
+            return {'CANCELLED'}
+
         provider_name = props.provider
 
         api_key = ""

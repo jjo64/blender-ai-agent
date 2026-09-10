@@ -1,4 +1,4 @@
-﻿"""
+"""
 Blender AI Agent - Extension Entry Point
 ========================================
 Asistente y Agente de Inteligencia Artificial para Blender con arquitectura ReAct,
@@ -17,6 +17,14 @@ bl_info = {
     "doc_url": "https://github.com/jjo64/blender-ai-agent",
     "category": "3D View",
 }
+
+import sys
+import os
+
+# Asegurar que el directorio raíz de la extensión esté en sys.path
+_addon_dir = os.path.dirname(os.path.abspath(__file__))
+if _addon_dir not in sys.path:
+    sys.path.insert(0, _addon_dir)
 
 import bpy
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty

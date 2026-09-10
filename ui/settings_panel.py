@@ -1,4 +1,4 @@
-﻿"""
+"""
 ui/settings_panel.py
 ====================
 Panel de configuración y preferencias del Add-on (API Keys, modelos y timeouts).
@@ -17,7 +17,7 @@ except ImportError:
 
 class AIAgentPreferences(AddonPreferences):
     """Preferencias persistidas en userpref.blend de Blender."""
-    bl_idname = __package__.split('.')[0] if __package__ else "blender-ai-agent"
+    bl_idname = __package__ or "blender_ai_agent"
 
     anthropic_api_key: StringProperty(
         name="Anthropic API Key",
