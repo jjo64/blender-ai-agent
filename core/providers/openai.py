@@ -125,6 +125,9 @@ class OpenAIProvider(BaseProvider):
 
         if tools:
             payload["tools"] = tools
+            # Modelos de razonamiento (GPT-5.x, GPT-6, o1, o3) requieren reasoning_effort='none' cuando se usan herramientas de función
+            if any(k in target_model.lower() for k in ["gpt-5", "gpt-6", "o1", "o3", "luna", "sol", "terra", "astra"]):
+                payload["reasoning_effort"] = "none"
 
         return payload
 
