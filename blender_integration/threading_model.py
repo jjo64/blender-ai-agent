@@ -46,6 +46,16 @@ class PendingAction:
     description: str
 
 
+@dataclass
+class MainThreadExecutionRequest:
+    """Solicitud de ejecución síncrona en el hilo principal de Blender."""
+    func: Callable[..., Any]
+    args: tuple
+    kwargs: dict
+    event: threading.Event
+    result_holder: Dict[str, Any]
+
+
 class TaskBridge:
     """
     Puente de comunicación bidireccional y seguro entre el Worker Thread y el Main Thread de Blender.
@@ -107,6 +117,36 @@ class TaskBridge:
         """Método seguro llamado desde el Worker para encolar una acción pendiente de aprobación."""
         self.message_queue.put(action)
 
+    def run_in_main_thread(self, func: Callable[..., Any], *args: Any, **kwargs: Any) -> Any:
+        """
+        Ejecuta una función en el hilo principal de Blender de manera síncrona y segura.
+        Si se invoca desde el hilo principal o fuera de Blender, se ejecuta directamente.
+        """
+        if not BLENDER_AVAILABLE or threading.current_thread() is threading.main_thread():
+            return func(*args, **kwargs)
+
+        event = threading.Event()
+        result_holder: Dict[str, Any] = {}
+        req = MainThreadExecutionRequest(
+            func=func,
+            args=args,
+            kwargs=kwargs,
+            event=event,
+            result_holder=result_holder
+        )
+
+        self.message_queue.put(req)
+        self._ensure_timer_registered()
+
+        # Esperar a que el Main Thread ejecute la función
+        if not event.wait(timeout=120.0):
+            raise TimeoutError("Tiempo de espera agotado esperando ejecución en el hilo principal de Blender.")
+
+        if "error" in result_holder:
+            raise result_holder["error"]
+
+        return result_holder.get("result")
+
     def _run_wrapper(self, target: Callable[..., Any], args: tuple, kwargs: dict) -> None:
         """Envoltorio de ejecución segura con captura de excepciones no controladas."""
         try:
@@ -140,7 +180,16 @@ class TaskBridge:
 
             has_updates = True
 
-            if isinstance(item, StreamChunk):
+            if isinstance(item, MainThreadExecutionRequest):
+                try:
+                    res = item.func(*item.args, **item.kwargs)
+                    item.result_holder["result"] = res
+                except Exception as ex:
+                    logger.exception("Error ejecutando función en Main Thread: %s", str(ex))
+                    item.result_holder["error"] = ex
+                finally:
+                    item.event.set()
+            elif isinstance(item, StreamChunk):
                 for cb in self._on_chunk_callbacks:
                     cb(item)
             elif isinstance(item, WorkerResult):
@@ -158,7 +207,7 @@ class TaskBridge:
             self._is_timer_registered = False
             return None  # Cancela el timer hasta el próximo start_worker
 
-        return 0.05  # Re-evalúa cada 50ms mientras haya actividad
+        return 0.01  # Re-evalúa cada 10ms para máxima fluidez y ejecución instantánea
 
     def _force_redraw(self) -> None:
         """Solicita el redibujado de todas las ventanas 3D y paneles en Blender."""

@@ -121,7 +121,8 @@ class AI_AGENT_OT_send_message(Operator):
                 provider=provider,
                 auth_gate=session_state.auth_gate,
                 context_manager=session_state.context_manager,
-                max_iterations=addon_prefs.max_iterations
+                max_iterations=addon_prefs.max_iterations,
+                tool_executor=task_bridge.run_in_main_thread
             )
 
             # Notificación de acciones pendientes hacia el TaskBridge
@@ -143,21 +144,12 @@ class AI_AGENT_OT_send_message(Operator):
                 yield_chunk=chunk_handler
             )
 
-            # Registrar costo en el tracker de sesión
-            if res.total_cost_usd > 0:
-                props_cost = context.scene.ai_agent_props
-                # Encolar resultado final
-                task_bridge.push_result(WorkerResult(
-                    success=res.success,
-                    content=res.content,
-                    error_type=res.error_type
-                ))
-            else:
-                task_bridge.push_result(WorkerResult(
-                    success=res.success,
-                    content=res.content,
-                    error_type=res.error_type
-                ))
+            # Encolar resultado final de forma thread-safe
+            task_bridge.push_result(WorkerResult(
+                success=res.success,
+                content=res.content,
+                error_type=res.error_type
+            ))
 
         # 6. Lanzar worker en TaskBridge
         task_bridge.start_worker(background_task)

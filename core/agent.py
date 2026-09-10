@@ -66,13 +66,15 @@ class AgentLoop:
         tool_registry: Optional[ToolRegistry] = None,
         auth_gate: Optional[AuthGate] = None,
         context_manager: Optional[ContextManager] = None,
-        max_iterations: int = 10
+        max_iterations: int = 10,
+        tool_executor: Optional[Callable[..., Any]] = None
     ):
         self.provider = provider
         self.tool_registry = tool_registry or default_registry
         self.auth_gate = auth_gate or AuthGate(auto_approve=False)
         self.context_manager = context_manager or ContextManager()
         self.max_iterations = max_iterations
+        self.tool_executor = tool_executor
 
     def _get_provider_tools_schema(self) -> List[Dict[str, Any]]:
         """Selecciona el formato de schema de herramientas correspondiente al proveedor."""
@@ -196,7 +198,10 @@ class AgentLoop:
                     # Ejecutar la herramienta en Blender
                     try:
                         logger.info("Ejecutando herramienta '%s' con argumentos %s", tool_def.name, tool_call.arguments)
-                        raw_result = tool_def.execute(**tool_call.arguments)
+                        if self.tool_executor:
+                            raw_result = self.tool_executor(tool_def.func, **tool_call.arguments)
+                        else:
+                            raw_result = tool_def.execute(**tool_call.arguments)
                         result_str = str(raw_result) if raw_result is not None else "Acción completada con éxito."
                     except Exception as ex:
                         logger.exception("Fallo al ejecutar herramienta '%s': %s", tool_def.name, str(ex))

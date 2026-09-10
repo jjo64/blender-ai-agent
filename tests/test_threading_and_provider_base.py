@@ -1,9 +1,10 @@
-﻿"""
+"""
 tests/test_threading_and_provider_base.py
 =========================================
 Pruebas unitarias para los contratos de providers y el TaskBridge concurrente.
 """
 
+import threading
 import time
 import unittest
 from core.providers.base import (
@@ -95,6 +96,29 @@ class TestProviderBaseAndThreading(unittest.TestCase):
         self.assertEqual(len(received_results), 1)
         self.assertTrue(received_results[0].success)
         self.assertEqual(received_results[0].content, "Tarea completada")
+
+    def test_run_in_main_thread_direct_fallback(self):
+        bridge = TaskBridge()
+        def add(a, b):
+            return a + b
+        res = bridge.run_in_main_thread(add, 10, 20)
+        self.assertEqual(res, 30)
+
+    def test_run_in_main_thread_worker_dispatch(self):
+        bridge = TaskBridge()
+        worker_res = []
+
+        def background_caller():
+            # Llamada síncrona que simula requerir el Main Thread
+            val = bridge.run_in_main_thread(lambda x: x * 3, 7)
+            worker_res.append(val)
+
+        # En entorno sin bpy, BLENDER_AVAILABLE es False, por lo que run_in_main_thread corre de inmediato de forma segura
+        t = threading.Thread(target=background_caller)
+        t.start()
+        t.join(timeout=2.0)
+
+        self.assertEqual(worker_res, [21])
 
 
 if __name__ == "__main__":
